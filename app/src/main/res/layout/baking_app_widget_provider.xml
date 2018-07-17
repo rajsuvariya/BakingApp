@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/aw_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
@@ -24,6 +25,7 @@
         tools:text="content"
         android:textSize="12dp"
         android:layout_margin="8dp"
+        android:gravity="center"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/aw_title"
         android:textColor="@color/white"

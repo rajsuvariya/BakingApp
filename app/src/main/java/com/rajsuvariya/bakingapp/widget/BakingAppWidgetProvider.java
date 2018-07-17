@@ -13,10 +13,12 @@ import android.widget.RemoteViews;
 
 import com.rajsuvariya.bakingapp.R;
 import com.rajsuvariya.bakingapp.data.DataManager;
+import com.rajsuvariya.bakingapp.data.remote.model.Ingredient;
 import com.rajsuvariya.bakingapp.data.remote.model.RecipeListResponseModel;
 import com.rajsuvariya.bakingapp.injection.component.DaggerWidgetComponent;
 import com.rajsuvariya.bakingapp.injection.module.ApplicationModule;
 import com.rajsuvariya.bakingapp.ui.recipeList.RecipeListActivity;
+import com.rajsuvariya.bakingapp.ui.stepsList.StepListActivity;
 
 import javax.inject.Inject;
 
@@ -30,7 +32,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
     @Inject
     DataManager dataManager;
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, RecipeListResponseModel lastSeenRecipeModel) {
         Log.d(TAG, "updateAppWidget");
 
@@ -38,18 +40,34 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget_provider);
 
-        Intent intent = new Intent(context, RecipeListActivity.class);
+//        Intent intent = new Intent(context, RecipeListActivity.class);
+        Intent intent = new Intent(context, StepListActivity.class);
+        intent.putExtra(StepListActivity.RECIPE_DETAILS, lastSeenRecipeModel);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        views.setOnClickPendingIntent(R.id.aw_title, pendingIntent);
+        views.setOnClickPendingIntent(R.id.aw_container, pendingIntent);
 
         if (lastSeenRecipeModel!=null) {
+            StringBuilder ingredientStringBuilder = new StringBuilder();
+            for (Ingredient ingredient : lastSeenRecipeModel.getIngredients()) {
+                ingredientStringBuilder.append(ingredient.getIngredient());
+                ingredientStringBuilder.append(" (");
+                ingredientStringBuilder.append(ingredient.getQuantity());
+                ingredientStringBuilder.append(" ");
+                ingredientStringBuilder.append(ingredient.getMeasure());
+                ingredientStringBuilder.append(")\n");
+            }
+
             views.setTextViewText(R.id.aw_title, lastSeenRecipeModel.getName());
+            views.setTextViewText(R.id.aw_content, ingredientStringBuilder);
             views.setViewVisibility(R.id.aw_title, View.VISIBLE);
             views.setViewVisibility(R.id.aw_no_recipe_available, View.GONE);
+            views.setViewVisibility(R.id.aw_content, View.VISIBLE);
         } else {
             views.setViewVisibility(R.id.aw_title, View.GONE);
             views.setViewVisibility(R.id.aw_no_recipe_available, View.VISIBLE);
+            views.setViewVisibility(R.id.aw_content, View.GONE);
         }
 
         // Instruct the widget manager to update the widget
@@ -83,18 +101,6 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         Log.d(TAG, "onDisabled");
         // Enter relevant functionality for when the last widget is disabled
     }
-//
-//    @Override
-//    public void onReceive(Context context, Intent intent) {
-//        super.onReceive(context, intent);
-//
-//        Log.d(TAG, "onReceive");
-//        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-//        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, BakingAppWidgetProvider.class));
-//
-//        if (intent.getAction().equalsIgnoreCase(AppWidgetManager.ACTION_APPWIDGET_UPDATE)){
-//            onUpdate(context, appWidgetManager, appWidgetIds);
-//        }
-//    }
+
 }
 

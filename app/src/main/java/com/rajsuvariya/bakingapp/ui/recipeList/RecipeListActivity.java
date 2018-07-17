@@ -66,6 +66,10 @@ public class RecipeListActivity extends BaseActivity implements RecipeListMvpVie
         int[] ids = AppWidgetManager.getInstance(getApplication())
                 .getAppWidgetIds(new ComponentName(getApplication(), BakingAppWidgetProvider.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+
+        for (int appWidgetId : ids) {
+            BakingAppWidgetProvider.updateAppWidget(this, AppWidgetManager.getInstance(this), appWidgetId, recipeListResponseModel);
+        }
         sendBroadcast(intent);
     }
 }
