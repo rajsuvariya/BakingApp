@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Starter</string>
+    <string name="app_name">Baking App</string>
 
 
     <!--App Message-->
@@ -9,4 +9,11 @@
     <string name="connection_error">Internet connection lost!</string>
     <string name="empty_pan">Please Enter your PAN No</string>
     <string name="invalid_pan">Please enter a valid PAN No</string>
+
+    <string name="serving">Serving: %1$d</string>
+    <string name="title_step_list">Steps</string>
+    <string name="title_step_detail">Step Detail</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

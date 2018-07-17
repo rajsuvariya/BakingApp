@@ -6,7 +6,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
-        applicationId "io.iamBedant.starter"
+        applicationId "com.rajsuvariya.bakingapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -21,13 +21,13 @@ android {
     flavorDimensions "mode"
     productFlavors {
         uat {
-            it.buildConfigField 'String', 'BASE_URL', BaseUrlUat
-            it.buildConfigField 'String', 'PASSWORD', passwordUat
+            it.buildConfigField 'String', 'BASE_URL', "\"https://api.themoviedb.org/3/\""
+            it.buildConfigField 'String', 'PASSWORD', "\"123\""
             dimension "mode"
         }
         prod {
-            it.buildConfigField 'String', 'BASE_URL', BaseUrlProd
-            it.buildConfigField 'String', 'PASSWORD', passwordProd
+            it.buildConfigField 'String', 'BASE_URL', "\"https://api.themoviedb.org/3/\""
+            it.buildConfigField 'String', 'PASSWORD', "\"123\""
             dimension "mode"
         }
     }
@@ -67,6 +67,10 @@ android {
 
 dependencies {
 
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // android support libraries
@@ -110,8 +114,6 @@ dependencies {
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
-
-
     // UI Testing
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -119,9 +121,29 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
     androidTestCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    // networking
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+
+    // Android Arch
+    compile "android.arch.persistence.room:runtime:1.1.1"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+    compile "android.arch.lifecycle:runtime:1.1.1"
+    compile "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+
+    // ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.2'
 
 }
 repositories {

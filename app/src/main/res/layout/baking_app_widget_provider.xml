@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/widget_margin">
+
+    <TextView
+        android:id="@+id/aw_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:textSize="16dp"
+        tools:text="Title"
+        android:textColor="@color/white"
+        android:contentDescription="@string/appwidget_text"
+        />
+
+    <TextView
+        android:id="@+id/aw_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="content"
+        android:textSize="12dp"
+        android:layout_margin="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/aw_title"
+        android:textColor="@color/white"
+        />
+
+    <ImageView
+        android:id="@+id/aw_no_recipe_available"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/app_icon"/>
+</RelativeLayout>

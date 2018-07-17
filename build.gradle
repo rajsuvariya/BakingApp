@@ -5,9 +5,10 @@ buildscript {
     repositories {
         maven { url 'https://maven.google.com' }
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -27,13 +28,13 @@ task clean(type: Delete) {
 
 ext {
     // Sdk and tools
-    minSdkVersion = 16
-    targetSdkVersion = 25
-    compileSdkVersion = 'android-O'
-    buildToolsVersion = '26.0.0 rc2'
+    minSdkVersion = 19
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = "27.0.0"
 
     // App dependencies
-    supportLibraryVersion = '26.+'
+    supportLibraryVersion = '27.1.1'
     gsonVersion = '2.8.0'
     calligraphyVersion = '2.2.0'
 
@@ -47,7 +48,7 @@ ext {
     placeholderviewVersion = '0.6.1'
     debugDBVersion = '1.0.0'
     timberVersion = '4.5.1'
-    constraintVersion = '1.0.0-beta4'
+    constraintVersion = '1.1.0'
     glideVersion ='3.7.0'
     v4Support ='19.1.0'
     javaxInject ='1'
