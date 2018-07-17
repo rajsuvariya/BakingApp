@@ -26,6 +26,7 @@
         android:textSize="12dp"
         android:layout_margin="8dp"
         android:gravity="center"
+        android:nestedScrollingEnabled="true"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/aw_title"
         android:textColor="@color/white"

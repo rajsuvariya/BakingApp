@@ -25,6 +25,7 @@
         <activity
             android:name=".ui.stepsList.StepListActivity"
             android:label="@string/title_step_list"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.stepsList.StepDetailActivity"

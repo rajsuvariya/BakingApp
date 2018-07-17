@@ -24,6 +24,9 @@ import com.rajsuvariya.bakingapp.ui.recipeList.RecipeListActivity;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * An activity representing a list of Steps. This activity
  * has different presentations for handset and tablet-size devices. On
@@ -42,10 +45,15 @@ public class StepListActivity extends AppCompatActivity {
     public static final String RECIPE_DETAILS = "_Recipe_Details";
     private RecipeListResponseModel mRecipeListResponseModel;
 
+    @BindView(R.id.step_list)
+    RecyclerView rvStepList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_list);
+
+        ButterKnife.bind(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,17 +80,20 @@ public class StepListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.step_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
-
-
+        setupRecyclerView(rvStepList);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, mRecipeListResponseModel, mTwoPane));
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mRecipeListResponseModel = intent.getParcelableExtra(RECIPE_DETAILS);
+        setTitle(mRecipeListResponseModel.getName());
+        setupRecyclerView(rvStepList);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

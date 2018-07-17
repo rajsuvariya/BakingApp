@@ -40,15 +40,13 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget_provider);
 
-//        Intent intent = new Intent(context, RecipeListActivity.class);
-        Intent intent = new Intent(context, StepListActivity.class);
-        intent.putExtra(StepListActivity.RECIPE_DETAILS, lastSeenRecipeModel);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-        views.setOnClickPendingIntent(R.id.aw_container, pendingIntent);
-
         if (lastSeenRecipeModel!=null) {
+            Intent intent = new Intent(context, StepListActivity.class);
+            intent.putExtra(StepListActivity.RECIPE_DETAILS, lastSeenRecipeModel);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setOnClickPendingIntent(R.id.aw_container, pendingIntent);
+
             StringBuilder ingredientStringBuilder = new StringBuilder();
             for (Ingredient ingredient : lastSeenRecipeModel.getIngredients()) {
                 ingredientStringBuilder.append(ingredient.getIngredient());
@@ -65,6 +63,11 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
             views.setViewVisibility(R.id.aw_no_recipe_available, View.GONE);
             views.setViewVisibility(R.id.aw_content, View.VISIBLE);
         } else {
+            Intent intent = new Intent(context, RecipeListActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setOnClickPendingIntent(R.id.aw_container, pendingIntent);
+
             views.setViewVisibility(R.id.aw_title, View.GONE);
             views.setViewVisibility(R.id.aw_no_recipe_available, View.VISIBLE);
             views.setViewVisibility(R.id.aw_content, View.GONE);
