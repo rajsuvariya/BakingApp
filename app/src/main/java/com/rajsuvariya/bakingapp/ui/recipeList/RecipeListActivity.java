@@ -2,6 +2,7 @@ package com.rajsuvariya.bakingapp.ui.recipeList;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,12 +11,15 @@ import android.support.test.espresso.IdlingResource;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.rajsuvariya.bakingapp.R;
 import com.rajsuvariya.bakingapp.data.remote.model.RecipeListResponseModel;
 import com.rajsuvariya.bakingapp.idlingResource.SimpleIdlingResource;
 import com.rajsuvariya.bakingapp.ui.base.BaseActivity;
 import com.rajsuvariya.bakingapp.ui.stepsList.StepListActivity;
+import com.rajsuvariya.bakingapp.utils.DialogUtils;
 import com.rajsuvariya.bakingapp.utils.ViewUtils;
 import com.rajsuvariya.bakingapp.widget.BakingAppWidgetProvider;
 
@@ -34,9 +38,12 @@ public class RecipeListActivity extends BaseActivity implements RecipeListMvpVie
     @BindView(R.id.rv_recipe_list)
     RecyclerView rvRecipeList;
 
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
+
     @VisibleForTesting
     @Nullable
-    private IdlingResource simpleIdlingResource;
+    private SimpleIdlingResource simpleIdlingResource;
 
     @Nullable
     public IdlingResource getSimpleIdlingResource() {
@@ -52,12 +59,12 @@ public class RecipeListActivity extends BaseActivity implements RecipeListMvpVie
         setContentView(R.layout.activity_recipe_list);
 
         setTitle("Baking App");
+        getSimpleIdlingResource();
 
         ButterKnife.bind(this);
         getActivityComponent().inject(this);
         mPresenter.onAttach(this);
 
-        getSimpleIdlingResource();
     }
 
     @Override
@@ -76,8 +83,36 @@ public class RecipeListActivity extends BaseActivity implements RecipeListMvpVie
     @Override
     public void setIdlingResource(boolean idle) {
         if (simpleIdlingResource!=null) {
-            ((SimpleIdlingResource) simpleIdlingResource).setIdleState(idle);
+            simpleIdlingResource.setIdleState(idle);
         }
+    }
+
+    @Override
+    public void showLoader() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoader() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showNetworkNotAvailable() {
+        DialogUtils.dialogBoxWithButtons(this, "Network Not Available",
+                "Seems like your internet connection is not working. Please check connection and try again",
+                "Retry", "Cancel", false,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.getRecipeList();
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
     }
 
     @Override

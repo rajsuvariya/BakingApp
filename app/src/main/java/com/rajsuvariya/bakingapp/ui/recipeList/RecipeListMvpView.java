@@ -12,4 +12,11 @@ public interface RecipeListMvpView extends MvpView {
     void populateRecyclerView(ArrayList<RecipeListResponseModel> recipeListResponseModel);
 
     void setIdlingResource(boolean idle);
+
+    void showLoader();
+
+    void hideLoader();
+
+    void showNetworkNotAvailable();
+
 }

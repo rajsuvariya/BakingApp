@@ -11,6 +11,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
+import android.widget.TextView;
 
 import com.rajsuvariya.bakingapp.data.remote.model.RecipeListResponseModel;
 import com.rajsuvariya.bakingapp.ui.recipeList.RecipeListActivity;
@@ -34,7 +35,10 @@ import static android.support.test.espresso.core.deps.guava.base.Preconditions.c
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -44,7 +48,7 @@ import static org.hamcrest.Matchers.is;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class RecipeListTest {
+public class RecipeListActivityTest {
 
     private IdlingResource mIdlingResource;
 
@@ -61,31 +65,18 @@ public class RecipeListTest {
     }
 
     @Test
-    public void checkRecyclerViewPopulated() {
+    public void clickRecyclerViewItem_opensStepListActivity(){
         onData(is(instanceOf(RecipeListResponseModel.class)));
         onView(withId(R.id.rv_recipe_list))
-                .check(matches(atPosition(0, hasDescendant(withText("Nutella Pie")))));
-    }
+                .perform(RecyclerViewActions.<RecipeListAdapter.RecipeListViewHolder>scrollToPosition(0))
+                .check(matches(hasDescendant(withText("Nutella Pie"))));
 
-    public Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
-        checkNotNull(itemMatcher);
-        return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("has item at position " + position + ": ");
-                itemMatcher.describeTo(description);
-            }
+        onView(withId(R.id.rv_recipe_list)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-            @Override
-            protected boolean matchesSafely(final RecyclerView view) {
-                RecyclerView.ViewHolder viewHolder = view.findViewHolderForAdapterPosition(position);
-                if (viewHolder == null) {
-                    // has no item on such position
-                    return false;
-                }
-                return itemMatcher.matches(viewHolder.itemView);
-            }
-        };
+        onView(allOf(instanceOf(TextView.class),
+                withParent(withResourceName("action_bar"))))
+                .check(matches(withText("Nutella Pie")));
     }
 
     @After

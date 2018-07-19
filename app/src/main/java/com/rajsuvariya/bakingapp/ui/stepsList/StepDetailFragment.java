@@ -105,23 +105,24 @@ public class StepDetailFragment extends Fragment {
 
         String videoUrl = null;
         String photoUrl = null;
+
         if (mStepDetails.getVideoURL()!=null && mStepDetails.getVideoURL().contains("mp4")){
             videoUrl = mStepDetails.getVideoURL();
-        } else {
-            photoUrl = mStepDetails.getVideoURL();
         }
-        if (mStepDetails.getThumbnailURL()!=null && mStepDetails.getThumbnailURL().contains("mp4")){
-            videoUrl = mStepDetails.getThumbnailURL();
-        } else {
+
+        if (mStepDetails.getThumbnailURL()!=null && (mStepDetails.getThumbnailURL().contains("jpg") || mStepDetails.getThumbnailURL().contains("png"))){
             photoUrl = mStepDetails.getThumbnailURL();
         }
 
         if (!TextUtils.isEmpty(videoUrl)) {
+            epvVideoPlayerView.setVisibility(View.VISIBLE);
             setUpExoPlayer(videoUrl);
         } else {
             epvVideoPlayerView.setVisibility(View.GONE);
         }
+
         if (!TextUtils.isEmpty(photoUrl)) {
+            ivStepThumbnail.setVisibility(View.VISIBLE);
             Glide.with(this).load(photoUrl).into(ivStepThumbnail);
         } else {
             ivStepThumbnail.setVisibility(View.GONE);

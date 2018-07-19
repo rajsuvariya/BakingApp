@@ -8,4 +8,6 @@ import com.rajsuvariya.bakingapp.ui.base.MvpPresenter;
  */
 public interface RecipeListMvpPresenter<T extends RecipeListMvpView> extends MvpPresenter<T> {
     void saveLatestSeenRecipe(RecipeListResponseModel recipeListResponseModel);
+
+    void getRecipeList();
 }

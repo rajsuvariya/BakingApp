@@ -9,7 +9,6 @@ import com.rajsuvariya.bakingapp.injection.component.DaggerApplicationComponent;
 import com.rajsuvariya.bakingapp.injection.module.ApplicationModule;
 
 import javax.inject.Inject;
-import timber.log.Timber;
 
 /**
  * Created by @rajsuvariya on 15/03/17.
@@ -29,10 +28,6 @@ public class IfaApp extends Application {
         .applicationModule(new ApplicationModule(this)).build();
 
     mApplicationComponent.inject(this);
-
-    if (BuildConfig.DEBUG) {
-      Timber.plant(new Timber.DebugTree());
-    }
 
     AndroidNetworking.initialize(getApplicationContext());
     if (BuildConfig.DEBUG) {

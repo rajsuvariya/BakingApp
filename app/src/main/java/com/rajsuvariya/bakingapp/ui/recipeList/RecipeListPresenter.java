@@ -1,7 +1,5 @@
 package com.rajsuvariya.bakingapp.ui.recipeList;
 
-import android.util.Log;
-
 import com.rajsuvariya.bakingapp.data.DataManager;
 import com.rajsuvariya.bakingapp.data.remote.model.RecipeListResponseModel;
 import com.rajsuvariya.bakingapp.ui.base.BasePresenter;
@@ -37,24 +35,31 @@ public class RecipeListPresenter<T extends RecipeListMvpView> extends BasePresen
         getRecipeList();
     }
 
-    private void getRecipeList() {
-        getMvpView().setIdlingResource(false);
-        getCompositeDisposable().add(
-                getDataManager().getRecipeList()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<ArrayList<RecipeListResponseModel>>() {
-                            @Override
-                            public void accept(ArrayList<RecipeListResponseModel> recipeListResponseModel) throws Exception {
-                                getMvpView().populateRecyclerView(recipeListResponseModel);
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                getMvpView().setIdlingResource(true);
-                            }
-                        })
-        );
+    public void getRecipeList() {
+        if (getMvpView().isNetworkConnected()) {
+            getMvpView().setIdlingResource(false);
+            getMvpView().showLoader();
+            getCompositeDisposable().add(
+                    getDataManager().getRecipeList()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<ArrayList<RecipeListResponseModel>>() {
+                                @Override
+                                public void accept(ArrayList<RecipeListResponseModel> recipeListResponseModel) throws Exception {
+                                    getMvpView().populateRecyclerView(recipeListResponseModel);
+                                    getMvpView().hideLoader();
+                                }
+                            }, new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable throwable) throws Exception {
+                                    getMvpView().setIdlingResource(true);
+                                    getMvpView().hideLoader();
+                                }
+                            })
+            );
+        } else {
+            getMvpView().showNetworkNotAvailable();
+        }
     }
 
     @Override

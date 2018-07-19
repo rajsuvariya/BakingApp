@@ -6,9 +6,6 @@ import android.content.Context;
 
 import com.rajsuvariya.bakingapp.injection.ActivityContext;
 import com.rajsuvariya.bakingapp.injection.PerActivity;
-import com.rajsuvariya.bakingapp.ui.login.LoginMvpPresenter;
-import com.rajsuvariya.bakingapp.ui.login.LoginMvpView;
-import com.rajsuvariya.bakingapp.ui.login.LoginPresenter;
 import com.rajsuvariya.bakingapp.ui.recipeList.RecipeListMvpPresenter;
 import com.rajsuvariya.bakingapp.ui.recipeList.RecipeListMvpView;
 import com.rajsuvariya.bakingapp.ui.recipeList.RecipeListPresenter;
@@ -52,12 +49,6 @@ public class ActivityModule {
     @Provides
     @PerActivity
     SplashMvpPresenter<SplashMvpView> provideSplashPresenter(SplashPresenter<SplashMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
-    @PerActivity
-    LoginMvpPresenter<LoginMvpView> provideLoginPresenter(LoginPresenter<LoginMvpView> presenter) {
         return presenter;
     }
 
