@@ -38,6 +38,7 @@ public class RecipeListPresenter<T extends RecipeListMvpView> extends BasePresen
     }
 
     private void getRecipeList() {
+        getMvpView().setIdlingResource(false);
         getCompositeDisposable().add(
                 getDataManager().getRecipeList()
                         .subscribeOn(Schedulers.io())
@@ -46,12 +47,11 @@ public class RecipeListPresenter<T extends RecipeListMvpView> extends BasePresen
                             @Override
                             public void accept(ArrayList<RecipeListResponseModel> recipeListResponseModel) throws Exception {
                                 getMvpView().populateRecyclerView(recipeListResponseModel);
-                                Log.d("dasasd", recipeListResponseModel.toString());
                             }
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
-                                Log.wtf("dasasd", throwable);
+                                getMvpView().setIdlingResource(true);
                             }
                         })
         );

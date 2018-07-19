@@ -10,4 +10,6 @@ import java.util.ArrayList;
  */
 public interface RecipeListMvpView extends MvpView {
     void populateRecyclerView(ArrayList<RecipeListResponseModel> recipeListResponseModel);
+
+    void setIdlingResource(boolean idle);
 }
