@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,6 +41,8 @@ import butterknife.ButterKnife;
 public class StepDetailFragment extends Fragment {
 
     public static final String STEP_DETAILS = "_Step_Details";
+    public static final String PLAYER_STATE = "_Player_State";
+    public static final String START_POSITION = "_Time_Elapsed";
 
     private Step mStepDetails;
 
@@ -53,6 +56,8 @@ public class StepDetailFragment extends Fragment {
     ImageView ivStepThumbnail;
 
     private SimpleExoPlayer mPlayer;
+    private boolean mPlayerState = true;
+    private long mStartPosition = 0;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -70,6 +75,51 @@ public class StepDetailFragment extends Fragment {
 
             Activity activity = this.getActivity();
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.step_detail, container, false);
+
+        ButterKnife.bind(this, rootView);
+
+        mPlayerState = savedInstanceState == null || savedInstanceState.getBoolean(PLAYER_STATE);
+        mStartPosition = savedInstanceState == null ? 0 : savedInstanceState.getLong(START_POSITION);
+
+        return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        String videoUrl = null;
+        String photoUrl = null;
+
+        if (mStepDetails.getVideoURL() != null && mStepDetails.getVideoURL().contains("mp4")) {
+            videoUrl = mStepDetails.getVideoURL();
+        }
+
+        if (mStepDetails.getThumbnailURL() != null && (mStepDetails.getThumbnailURL().contains("jpg") || mStepDetails.getThumbnailURL().contains("png"))) {
+            photoUrl = mStepDetails.getThumbnailURL();
+        }
+
+        if (!TextUtils.isEmpty(videoUrl)) {
+            epvVideoPlayerView.setVisibility(View.VISIBLE);
+            setUpExoPlayer(videoUrl);
+        } else {
+            epvVideoPlayerView.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(photoUrl)) {
+            ivStepThumbnail.setVisibility(View.VISIBLE);
+            Glide.with(this).load(photoUrl).into(ivStepThumbnail);
+        } else {
+            ivStepThumbnail.setVisibility(View.GONE);
+        }
+
+        tvLongDescription.setText(mStepDetails.getDescription());
     }
 
     private void setUpExoPlayer(String videoUrl) {
@@ -94,50 +144,29 @@ public class StepDetailFragment extends Fragment {
                 .createMediaSource(Uri.parse(videoUrl));
         // Prepare the player with the source.
         mPlayer.prepare(videoSource);
-        mPlayer.setPlayWhenReady(true);
+        mPlayer.setPlayWhenReady(mPlayerState);
+        if (mStartPosition > 0) {
+            mPlayer.seekTo(mStartPosition);
+        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.step_detail, container, false);
-        ButterKnife.bind(this, rootView);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(PLAYER_STATE, mPlayer.getPlayWhenReady());
+        outState.putLong(START_POSITION, mPlayer.getContentPosition());
+    }
 
-        String videoUrl = null;
-        String photoUrl = null;
-
-        if (mStepDetails.getVideoURL()!=null && mStepDetails.getVideoURL().contains("mp4")){
-            videoUrl = mStepDetails.getVideoURL();
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mPlayer != null) {
+            mPlayer.release();
         }
-
-        if (mStepDetails.getThumbnailURL()!=null && (mStepDetails.getThumbnailURL().contains("jpg") || mStepDetails.getThumbnailURL().contains("png"))){
-            photoUrl = mStepDetails.getThumbnailURL();
-        }
-
-        if (!TextUtils.isEmpty(videoUrl)) {
-            epvVideoPlayerView.setVisibility(View.VISIBLE);
-            setUpExoPlayer(videoUrl);
-        } else {
-            epvVideoPlayerView.setVisibility(View.GONE);
-        }
-
-        if (!TextUtils.isEmpty(photoUrl)) {
-            ivStepThumbnail.setVisibility(View.VISIBLE);
-            Glide.with(this).load(photoUrl).into(ivStepThumbnail);
-        } else {
-            ivStepThumbnail.setVisibility(View.GONE);
-        }
-
-        tvLongDescription.setText(mStepDetails.getDescription());
-
-        return rootView;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mPlayer!=null) {
-            mPlayer.release();
-        }
     }
 }

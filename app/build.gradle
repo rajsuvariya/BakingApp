@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 //apply from: '../config/quality/quality.gradle'
 
 android {
@@ -127,7 +126,6 @@ dependencies {
     }
 
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     // networking
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'

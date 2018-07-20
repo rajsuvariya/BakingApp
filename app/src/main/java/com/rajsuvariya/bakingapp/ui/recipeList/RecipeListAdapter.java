@@ -2,11 +2,14 @@ package com.rajsuvariya.bakingapp.ui.recipeList;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.rajsuvariya.bakingapp.R;
 import com.rajsuvariya.bakingapp.data.remote.model.RecipeListResponseModel;
 
@@ -47,6 +50,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
                 }
             }
         });
+        if (!TextUtils.isEmpty(mList.get(position).getImage())) {
+            Glide.with(mContext).load(mList.get(position).getImage()).placeholder(R.drawable.app_icon).into(holder.mIvRecipeImage);
+        }
     }
 
     @Override
@@ -66,6 +72,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
         @BindView(R.id.tv_serving)
         TextView mTvServing;
+
+        @BindView(R.id.iv_recipe_image)
+        ImageView mIvRecipeImage;
 
         public RecipeListViewHolder(View itemView) {
             super(itemView);
